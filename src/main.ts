@@ -14,32 +14,20 @@ SetText("click to start!")
 var isJumping = false
 let gameOver = true
 
-document.addEventListener('click', () => jump())
-
-
-setInterval(function () { Main()}, 10)
-
-function Main()
-{
-    if(gameOver == false)
-    {
-        score = score + 1;
-        SetText("Score: " + score)
-
-        CheckGameOver()
-    }
-}
-
+document.addEventListener('touchstart', jump)
 
 function jump()
 {
-    if(gameOver === false)
+    if(gameOver == false)
     {
         if(isJumping == false)
         {
             isJumping = true
             dino?.classList.add("jump")
-            setTimeout(RemoveJump, 500)
+            setTimeout((() => {
+                dino?.classList.remove("jump")
+                isJumping = false;
+            }), 500)
         }
     }
     else
@@ -49,12 +37,13 @@ function jump()
     
 }
 
-
-function RemoveJump()
+function StartGame()
 {
-    dino?.classList.remove("jump")
-    isJumping = false;
-    //mainLoop = mainLoop //bug fix?
+    console.log("Game started!")
+    gameOver = false
+    score = 0
+    cactus?.classList.add("cactusMove")
+    bird?.classList.add("birdMove")
 }
 
 function RemoveObstacles()
@@ -87,7 +76,8 @@ function CheckGameOver()
             gameOver = true
 
             //reset player
-            RemoveJump()
+            // dino?.classList.remove("jump")
+            // isJumping = false;
             
             //reset cactus
             RemoveObstacles()
@@ -101,23 +91,14 @@ function CheckGameOver()
             SetText("Final Score: " + score + "! Click To Play Again!")
             gameOver = true
 
-            //reset player
-            RemoveJump()
+            // //reset player
+            // dino?.classList.remove("jump")
+            // isJumping = false;
             
             //reset cactus
             RemoveObstacles()
         }
     }
-}
-
-
-function StartGame()
-{
-    console.log("Game started!")
-    gameOver = false
-    score = 0
-    cactus?.classList.add("cactusMove")
-    bird?.classList.add("birdMove")
 }
 
 function SetText(s: string)
@@ -127,3 +108,22 @@ function SetText(s: string)
         scoreText.textContent = s
     }
 }
+
+setInterval(function () { AddScore()}, 10)
+
+function AddScore()
+{
+    if(gameOver == false)
+    {
+        score = score + 1;
+        SetText("Score: " + score)
+
+        CheckGameOver()
+    }
+}
+
+// function RemoveJump()
+// {
+//     dino?.classList.remove("jump")
+//     isJumping = false;
+// }
