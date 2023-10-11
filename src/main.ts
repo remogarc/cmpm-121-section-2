@@ -31,7 +31,7 @@ function jump() {
 }
 
 function StartGame() {
-  console.log("Game started!");
+  console.log("Game Started!");
   gameOver = false;
   score = 0;
   cactus?.classList.add("cactusMove");
@@ -64,10 +64,6 @@ function CheckGameOver() {
     if (dinoTop >= 150 && Math.abs(cactusleft) < 7) {
       EndGame();
 
-      //reset player
-      // dino?.classList.remove("jump")
-      // isJumping = false;
-
       //reset cactus
       RemoveObstacles();
     }
@@ -75,9 +71,6 @@ function CheckGameOver() {
     //detect bird collision
     if (dinoTop <= 55 && Math.abs(birdleft) < 11) {
       EndGame();
-      // //reset player
-      // dino?.classList.remove("jump")
-      // isJumping = false;
 
       //reset cactus
       RemoveObstacles();
@@ -91,17 +84,15 @@ function SetText(s: string) {
   }
 }
 
-setInterval(function () {
-  AddScore();
-}, 10);
+requestAnimationFrame(AddScore);
 
 function AddScore() {
   if (gameOver == false) {
     score = score + 1;
     SetText("Score: " + score);
-
     CheckGameOver();
   }
+  requestAnimationFrame(AddScore);
 }
 
 function EndGame() {
