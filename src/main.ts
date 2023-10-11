@@ -1,125 +1,114 @@
 //purposely bad code so students can fix it - can make it worse
 
-import './style.css'
+import "./style.css";
 
-const dino = document.getElementById("dino")
-const cactus = document.getElementById("cactus")
-const bird = document.getElementById("bird")
+const dino = document.getElementById("dino");
+const cactus = document.getElementById("cactus");
+const bird = document.getElementById("bird");
 
-const scoreText = document.getElementById("scoreText")
-let score = 0
-SetText("click to start!")
+const scoreText = document.getElementById("scoreText");
+let score = 0;
+SetText("click to start!");
 
+var isJumping = false;
+let gameOver = true;
 
-var isJumping = false
-let gameOver = true
+document.addEventListener("mousedown", jump);
 
-document.addEventListener('touchstart', jump)
-
-function jump()
-{
-    if(gameOver == false)
-    {
-        if(isJumping == false)
-        {
-            isJumping = true
-            dino?.classList.add("jump")
-            setTimeout((() => {
-                dino?.classList.remove("jump")
-                isJumping = false;
-            }), 500)
-        }
+function jump() {
+  if (gameOver == false) {
+    if (isJumping == false) {
+      isJumping = true;
+      dino?.classList.add("jump");
+      setTimeout(() => {
+        dino?.classList.remove("jump");
+        isJumping = false;
+      }, 500);
     }
-    else
-    {
-        StartGame();
-    }
-    
+  } else {
+    StartGame();
+  }
 }
 
-function StartGame()
-{
-    console.log("Game started!")
-    gameOver = false
-    score = 0
-    cactus?.classList.add("cactusMove")
-    bird?.classList.add("birdMove")
+function StartGame() {
+  console.log("Game started!");
+  gameOver = false;
+  score = 0;
+  cactus?.classList.add("cactusMove");
+  bird?.classList.add("birdMove");
 }
 
-function RemoveObstacles()
-{
-    cactus?.classList.remove("cactusMove")
-    bird?.classList.remove("birdMove")
+function RemoveObstacles() {
+  cactus?.classList.remove("cactusMove");
+  bird?.classList.remove("birdMove");
 }
 
+function CheckGameOver() {
+  if (gameOver == false && dino != null && cactus != null && bird != null) {
+    //get is dinosaur jumping
+    let dinoTop = parseInt(
+      window.getComputedStyle(dino).getPropertyValue("top")
+    );
 
-function CheckGameOver()
-{
+    //get cactus position
+    let cactusleft = parseInt(
+      window.getComputedStyle(cactus).getPropertyValue("left")
+    );
 
-    if(gameOver == false && dino != null && cactus != null && bird != null)
-    {
-        //get is dinosaur jumping
-        let dinoTop = parseInt(window.getComputedStyle(dino).getPropertyValue("top"))
+    //get bird position
+    let birdleft = parseInt(
+      window.getComputedStyle(bird).getPropertyValue("left")
+    );
 
-        //get cactus position
-        let cactusleft = parseInt(window.getComputedStyle(cactus).getPropertyValue("left"))
+    //detect cactus collision
+    if (dinoTop >= 150 && Math.abs(cactusleft) < 7) {
+      EndGame();
 
-        //get bird position
-        let birdleft = parseInt(window.getComputedStyle(bird).getPropertyValue("left"))
+      //reset player
+      // dino?.classList.remove("jump")
+      // isJumping = false;
 
-        //detect cactus collision
-        if(dinoTop >= 150 && Math.abs(cactusleft) < 7)
-        {
-            //end game
-            console.log("player died!")
-            SetText("Final Score: " + score + "! Click To Play Again!")
-            gameOver = true
-
-            //reset player
-            // dino?.classList.remove("jump")
-            // isJumping = false;
-            
-            //reset cactus
-            RemoveObstacles()
-        }
-
-        //detect bird collision
-        if(dinoTop <= 55 && Math.abs(birdleft) < 11)
-        {
-            //end game
-            console.log("player died!")
-            SetText("Final Score: " + score + "! Click To Play Again!")
-            gameOver = true
-
-            // //reset player
-            // dino?.classList.remove("jump")
-            // isJumping = false;
-            
-            //reset cactus
-            RemoveObstacles()
-        }
+      //reset cactus
+      RemoveObstacles();
     }
+
+    //detect bird collision
+    if (dinoTop <= 55 && Math.abs(birdleft) < 11) {
+      EndGame();
+      // //reset player
+      // dino?.classList.remove("jump")
+      // isJumping = false;
+
+      //reset cactus
+      RemoveObstacles();
+    }
+  }
 }
 
-function SetText(s: string)
-{
-    if(scoreText)
-    {
-        scoreText.textContent = s
-    }
+function SetText(s: string) {
+  if (scoreText) {
+    scoreText.textContent = s;
+  }
 }
 
-setInterval(function () { AddScore()}, 10)
+setInterval(function () {
+  AddScore();
+}, 10);
 
-function AddScore()
-{
-    if(gameOver == false)
-    {
-        score = score + 1;
-        SetText("Score: " + score)
+function AddScore() {
+  if (gameOver == false) {
+    score = score + 1;
+    SetText("Score: " + score);
 
-        CheckGameOver()
-    }
+    CheckGameOver();
+  }
+}
+
+function EndGame() {
+  //end game
+  console.log("player died!");
+  SetText("Final Score: " + score + "! Click To Play Again!");
+  gameOver = true;
 }
 
 // function RemoveJump()
